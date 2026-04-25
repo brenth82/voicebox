@@ -22,7 +22,7 @@ RUN cd web && bunx --bun vite build
 
 
 # === Stage 2: Build Python dependencies ===
-FROM python:3.11-slim AS backend-builder
+FROM runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404 AS backend-builder
 
 WORKDIR /build
 
@@ -39,10 +39,10 @@ RUN pip install --no-cache-dir --prefix=/install --no-deps chatterbox-tts
 RUN pip install --no-cache-dir --prefix=/install --no-deps hume-tada
 RUN pip install --no-cache-dir --prefix=/install \
     git+https://github.com/QwenLM/Qwen3-TTS.git
-
+RUN pip install --no-cache-dir --prefix=/install flash-attn==2.8.3 --no-build-isolation
 
 # === Stage 3: Runtime ===
-FROM python:3.11-slim
+FROM runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
 
 # Create non-root user for security
 RUN groupadd -r voicebox && \
