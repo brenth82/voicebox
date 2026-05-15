@@ -34,12 +34,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --no-cache-dir --upgrade pip
 
 COPY backend/requirements.txt .
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
-RUN pip install --no-cache-dir --prefix=/install --no-deps chatterbox-tts
-RUN pip install --no-cache-dir --prefix=/install --no-deps hume-tada
-RUN pip install --no-cache-dir --prefix=/install \
+RUN pip install --no-cache-dir --ignore-installed --prefix=/install -r requirements.txt
+RUN pip install --no-cache-dir --ignore-installed --prefix=/install --no-deps chatterbox-tts
+RUN pip install --no-cache-dir --ignore-installed --prefix=/install --no-deps hume-tada
+RUN pip install --no-cache-dir --ignore-installed --prefix=/install \
     git+https://github.com/QwenLM/Qwen3-TTS.git
-RUN pip install --no-cache-dir --prefix=/install flash-attn==2.8.3 --no-build-isolation
+RUN pip install --no-cache-dir --ignore-installed --prefix=/install \
+    flash-attn==2.8.3 --no-build-isolation
 
 # === Stage 3: Runtime ===
 FROM runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
